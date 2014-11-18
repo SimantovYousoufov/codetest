@@ -1,0 +1,52 @@
+{
+    "R" : {
+        "range" : [
+            ["1","1"],
+            ["10", "H"]
+        ],
+        "description" : "General Residence District"
+    },
+    "C" : {
+        "range" : [
+            ["1","6"],
+            ["8", "4"]
+        ],
+        "description" : "Commercial Districts"
+    },
+    "M" : {
+        "range" : [
+            ["1","1"],
+            ["3", "2"]
+        ],
+        "description" : "Manufacturing Districts"
+    },
+    "M/R" : {
+        "range" : [
+            ["1","1", "5"],
+            ["1", "6", "10"]
+        ],
+        "description" : "Mixed Manufacturing & Residential Districts"
+    },
+    "BPC" : {
+        "description" : "Battery Park City"
+    },
+    "PARK" : {
+        "description" : "New York City Parks"
+    },
+    "PARKNYS" : {
+        "description" : "New York State Parks"
+    },
+    "PARKUS" : {
+        "description" : "United States Parks"
+    },
+    "ZNA" : {
+        "description" : "Zoning Not Applicable"
+    },
+    "ZR" : {
+        "range" : [
+            ["11"],
+            ["151"]
+        ],
+        "description" : "Special Zoning District"
+    }
+}
