@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+Route::get('db', 'QuestionOneController@getDatabaseData');
+Route::get('description', 'QuestionOneController@getDescriptions');
+Route::get('descriptors', 'QuestionOneController@getDescriptors');
+Route::get('check', 'QuestionOneController@checkRange');
+Route::get('twoelem', 'QuestionOneController@checkTwoElementCode');
