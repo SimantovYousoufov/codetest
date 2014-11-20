@@ -158,7 +158,9 @@ class QuestionOneController extends BaseController
                         $descriptor = $code[0];
                     }
 
-                    $results[$code] = $this->checkRange($encoded, $descriptor, $code);
+                    $results[$code] = $code[0] === 'R' ?
+                        $this->checkRange($encoded, $descriptor, $code, true) :
+                        $this->checkRange($encoded, $descriptor, $code);
                     break;
                 // If a special code
                 // @TODO Add a check for validity
@@ -183,7 +185,7 @@ class QuestionOneController extends BaseController
      * @param string $code
      * @return array
      */
-    public function checkRange($encoded, $descriptor, $code)
+    public function checkRange($encoded, $descriptor, $code, $twoRanges = false)
     {
         // Queries the mock database
         $codeData = $this->getDatabaseData(true, [$descriptor]);
@@ -192,8 +194,21 @@ class QuestionOneController extends BaseController
         $encodedMin = $this->encode($codeData[$descriptor]->range->min);
         $encodedMax = $this->encode($codeData[$descriptor]->range->max);
 
+        // If two ranges (R descriptor)
+        if ($codeData[$descriptor]->ranges == 2) {
+            $rangeTwoMin = $this->encode($codeData[$descriptor]->range->twoMin);
+            $rangeTwoMax = $this->encode($codeData[$descriptor]->range->twoMax);
+        }
 
-        if ($encoded >= $encodedMin && $encoded <= $encodedMax) {
+        // For R, if matches first range...
+        if (($encoded >= $encodedMin && $encoded <= $encodedMax)) {
+            return [
+                'code' => $code,
+                'description' => $codeData[$descriptor]->description
+            ];
+
+            // For R, if matches second range...
+        } elseif ($twoRanges === true && ($encoded >= $rangeTwoMin && $encoded <= $rangeTwoMax)) {
             return [
                 'code' => $code,
                 'description' => $codeData[$descriptor]->description

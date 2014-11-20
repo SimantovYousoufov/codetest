@@ -1,14 +1,16 @@
 {
     "R" : {
+        "ranges" : 2,
         "range" : {
             "min": "R1-1",
-            "minTwo": "R1A",
+            "twoMin": "R1A",
             "max" : "R10-10",
-            "maxTwo" : "R10A"
+            "twoMax" : "R10A"
         },
         "description" : "General Residence District"
     },
     "C" : {
+        "ranges" : 1,
         "range" : {
             "min" : "C1-6",
             "max" : "C8-6"
@@ -16,6 +18,7 @@
         "description" : "Commercial Districts"
     },
     "M" : {
+        "ranges" : 1,
         "range" : {
             "min" : "M1-1",
             "max" : "M3-2"
@@ -23,9 +26,10 @@
         "description" : "Manufacturing Districts"
     },
     "M/R" : {
+        "ranges" : 1,
         "range" : {
             "min": "M1-1/R5",
-            "max" : "M1-6/R9"
+            "max" : "M1-6/R10"
         },
         "description" : "Mixed Manufacturing & Residential Districts"
     },
@@ -45,6 +49,7 @@
         "description" : "Zoning Not Applicable"
     },
     "ZR" : {
+        "ranges" : 1,
         "range" : {
             "min" : "11",
             "max" : "151"

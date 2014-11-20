@@ -15,7 +15,7 @@ Route::get('db', 'QuestionOneController@getDatabaseData');
 Route::get('descriptors', 'QuestionOneController@getDescriptors');
 
 Route::get('description', 'QuestionOneController@getDescriptions');
+Route::get('consecutive', 'QuestionTwoController@checkConsecutive');
+Route::get('news', 'QuestionThreeController@getTheNews');
 
 Route::get('twoelem', 'QuestionOneController@checkTwoElementCode');
-
-Route::get('consecutive', 'QuestionTwoController@checkConsecutive');
