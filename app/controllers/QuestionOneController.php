@@ -174,7 +174,7 @@ class QuestionOneController extends BaseController
             }
         }
 
-        return Response::make(print_r($results), Respond::HTTP_OK);
+        return Response::json($results, Respond::HTTP_OK);
     }
 
     /**
@@ -200,7 +200,7 @@ class QuestionOneController extends BaseController
             $rangeTwoMax = $this->encode($codeData[$descriptor]->range->twoMax);
         }
 
-        // For R, if matches first range...
+        // If matches first range...
         if (($encoded >= $encodedMin && $encoded <= $encodedMax)) {
             return [
                 'code' => $code,
