@@ -22,18 +22,15 @@ class QuestionOneController extends BaseController
     }
 
     /**
-     * Normally this would be a private function, but it's public so it can be hit via a route to see its output
-     * for the purposes of this coding assignment.
-     *
-     * Reads the mockdb file and processes any query requests we send over.
+     * Reads the mockdb file and processes any query requests needed.
      *
      * @param bool $query
      * @param array $codesRequested
      * @return Response
      */
-    public function getDatabaseData($query = false, $codesRequested = ['C', 'R'])
+    private function getDatabaseData($query = false, $codesRequested = ['C', 'R'])
     {
-        // If this were a real database then this wouldn't need to pull all the data we have.
+        // If this were a real database then this wouldn't need to pull all the data we have on each request.
         $json = file_get_contents($this->dbFile);
 
         $data = json_decode($json);
@@ -48,10 +45,9 @@ class QuestionOneController extends BaseController
                 $results[$code] = $data->$code;
             }
             return $results;
-//            return Response::json($results, Respond::HTTP_OK);
-//            return Response::make(print_r($results), Respond::HTTP_OK);
         }
 
+        // Else...
         return Response::json(['status' => '400'], Respond::HTTP_BAD_REQUEST);
     }
 
@@ -80,10 +76,13 @@ class QuestionOneController extends BaseController
      * Own idea but based code off
      * http://stackoverflow.com/questions/16855555/convert-alphanumeric-to-numeric-and-should-be-an-unique-number
      *
-     * @param $code
+     * @param string $code
      * @return string
+     *
+     * @TODO If time, write a decode method
      */
-    public function encode($code) {
+    private function encode($code)
+    {
         // Split string into array and flip keys/values
         $array = array_flip(str_split($code));
 
@@ -101,14 +100,18 @@ class QuestionOneController extends BaseController
 
         $rules = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        // Each character in $rules will now correspond to a number (originally the array index for that character
-        // Character is the key, number is value
+        /**
+         * Each character in $rules will now correspond to a number (originally the array index for that character.
+         * Character is the key, number is value.
+         */
         $rules = array_flip(str_split($rules));
         $result = [];
         $stringLength = strlen($string);
 
-        // Each character in the string is saved to $rulesIndex to be used as an index to get the corresponding
-        // character's value and changed back from base 35 to base 10
+        /**
+         * Each character in the string is saved to $rulesIndex to be used as an index to get the corresponding
+         * character's value and changed back from base 35 (9 numbers + 26 letters).
+         */
         for ($i = 0; $i < $stringLength; $i++) {
             $ruleIndex = $string[$stringLength - ($i + 1)];
             array_push($result, ($rules[$ruleIndex] * pow(35, $i)));
@@ -121,66 +124,67 @@ class QuestionOneController extends BaseController
      *
      * Accepts a url parameter in the format of query={R7A,R8A,C4-4A}
      *
-     * @return mixed
+     * @return Response
      */
-    public function getDescriptions() {
+    public function getDescriptions()
+    {
         // Laravel automatically sanitizes inputs
         $request = Input::get('query');
 
+        // Remove {} from string
         $cleaned = str_replace('{', '', $request);
         $cleanedTwice = str_replace('}', '', $cleaned);
 
+        // Parse to array
         $codes = explode(',', $cleanedTwice);
-
-        $descriptors = $this->getDescriptors();
 
         // Codes with no ranges
         $specialDescriptors = ['BPC', 'PARK', 'PARKNYS', 'PARKUS', 'ZNA', 'ZR'];
 
-        try {
-            $results = [];
-            foreach ($codes as $code) {
-                switch ($code) {
-                    // If not a special code
-                    case (!in_array($code, $specialDescriptors)):
-                        $encoded = $this->encode($code);
+        /**
+         * If valid codes were a necessity (to later have work done with them), then encasing this in a
+         * try/catch and throwing an exception then handling it would prevent invalid codes from slipping through.
+         */
+        $results = [];
+        foreach ($codes as $code) {
+            switch ($code) {
+                // If not a special code
+                case (!in_array($code, $specialDescriptors)):
+                    $encoded = $this->encode($code);
 
-                        if (strpos($code, '/') !== false) {
-                            $descriptor = 'M/R';
-                        } else {
-                            $descriptor = $code[0];
-                        }
+                    if (strpos($code, '/') !== false) {
+                        $descriptor = 'M/R';
+                    } else {
+                        $descriptor = $code[0];
+                    }
 
-                        $results[$code] = $this->checkRange($encoded, $descriptor, $code);
-                        break;
-                    // If a special code
-                    // @TODO Add a check for special codes
-                    default:
-                        $codeData = $this->getDatabaseData(true, [$code]);
+                    $results[$code] = $this->checkRange($encoded, $descriptor, $code);
+                    break;
+                // If a special code
+                // @TODO Add a check for validity
+                default:
+                    $codeData = $this->getDatabaseData(true, [$code]);
 
-                        $results[$code] = [
-                            'description' => $codeData[$code]->description,
-                            'code' => $code
-                        ];
-                }
+                    $results[$code] = [
+                        'description' => $codeData[$code]->description,
+                        'code' => $code
+                    ];
             }
-        } catch (Exception $e) {
-            // Handle invalid descriptor
         }
 
-
-//        return Response::make(print_r($results), Respond::HTTP_OK);
+        return Response::make(print_r($results), Respond::HTTP_OK);
     }
 
     /**
      * Checks if the encoded code is within the accepted range
      *
-     * @param $encoded
-     * @param $descriptor
-     * @param $code
+     * @param string $encoded
+     * @param string $descriptor
+     * @param string $code
      * @return array
      */
-    public function checkRange($encoded, $descriptor, $code) {
+    public function checkRange($encoded, $descriptor, $code)
+    {
         // Queries the mock database
         $codeData = $this->getDatabaseData(true, [$descriptor]);
 

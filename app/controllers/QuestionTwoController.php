@@ -12,7 +12,9 @@ class QuestionTwoController extends BaseController
      * Checks an array for consecutive ascending or descending integers
      *
      * Sending a query like ?random=true will create a random array to check. False will run the array given in the
-     * problem.
+     * problem. Run takes precedence over query.
+     *
+     * To send your own array of numbers, use something like ?random=false&query={3,4,1,1,6,11,15,6,7,8,10,9,8,2,3}
      *
      * @return Response
      */
@@ -22,14 +24,26 @@ class QuestionTwoController extends BaseController
         $random = Input::get('random');
 
         // If random, create an array to check
-        if ($random == true) {
+        if ($random == 'true') {
             $numList = [];
             for ($i = 0; $i < 50; $i++) {
                 array_push($numList, rand(1, 19));
             }
         } else {
-            // Indexes[7,8,9] and [11,12]
-            $numList = [3,4,1,1,6,11,15,6,7,8,10,9,8,2,8];
+            $query = Input::get('query');
+
+            // Removes brackets
+            $cleaned = str_replace('}', '', str_replace('{', '', $query));
+
+            /**
+             * Creates an array from the string and maps values to integers. Not really necessary for the data
+             * to be set as integers, I just think the output is cleaner/easier to work with.
+             */
+            $numList = array_map('intval', explode(',', $cleaned));
+
+            // For debugging, known answer
+            // Indexes [7,8,9] and [11,12]
+            //$numList = [3,4,1,1,6,11,15,6,7,8,10,9,8,2,8];
         }
 
         // Going to fill these arrays
