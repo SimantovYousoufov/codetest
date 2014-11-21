@@ -12,7 +12,7 @@
 
 ##Sending requests:
 #####Using DHC, a similar REST client, or just navigating to the appropritate URL + parameters will do it.
-######Routes are located in app/routes.php
+#####Routes are located in app/routes.php
 + Question one:
   + {codetestserverroot}/public/index.php/description?query={R7A,R8A,C4-4A,M3-2,R8B,C1-6A,R7B,R8X,C1-7A,PARK,C1-9A,R6,C1-7,C2-6,R10,C4-5,C6-3X,C1-6,C6-2M,C6-4M,M2-4,M1-5/R7X} will return the test on the array of codes provided in the question. It will also accept any arbitrary codes.
   + {codetestserverroot}/public/index.php/descriptors will return the list of descriptors to show how I organized the mock database
