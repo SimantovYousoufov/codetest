@@ -128,7 +128,7 @@ class QuestionOneController extends BaseController
     public function getDescriptions()
     {
         // Laravel automatically sanitizes inputs
-        $request = Input::get('query');
+        $request = strtoupper(Input::get('query'));
 
         // Remove {} from string
         $cleaned = str_replace('{', '', $request);
