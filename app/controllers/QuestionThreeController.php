@@ -5,8 +5,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * Class QuestionThreeController
  *
- * Uses Symfony/dom-crawler and Symfony/css-selector
- *
+ * Crawls and retrieves CNN news article info
  */
 class QuestionThreeController extends BaseController
 {

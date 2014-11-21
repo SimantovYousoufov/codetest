@@ -73,7 +73,7 @@ class QuestionTwoController extends BaseController
         }
 
         return Response::json([
-            'numString' => $numList,
+            'numbers' => $numList,
             'ascending' => $ascending,
             'descending' => $descending
         ],

@@ -5,7 +5,6 @@ use Illuminate\Http\Response as Respond;
  * Class QuestionOneController
  *
  * Controller for question one. It uses a mock database in the form of a JSON file in app/storage/mockdb/codes.json.
- * Any lines with print_r() are for debugging.
  */
 class QuestionOneController extends BaseController
 {
@@ -42,7 +41,7 @@ class QuestionOneController extends BaseController
             $results = [];
 
             foreach ($codesRequested as $code) {
-                $results[$code] = $data->$code;
+                    $results[$code] = $data->$code;
             }
             return $results;
         }
@@ -158,9 +157,19 @@ class QuestionOneController extends BaseController
                         $descriptor = $code[0];
                     }
 
-                    $results[$code] = $code[0] === 'R' ?
-                        $this->checkRange($encoded, $descriptor, $code, true) :
-                        $this->checkRange($encoded, $descriptor, $code);
+                    try {
+                        $results[$code] = $code[0] === 'R' ?
+                            $this->checkRange($encoded, $descriptor, $code, true) :
+                            $this->checkRange($encoded, $descriptor, $code);
+                    } catch (Exception $e) {
+                        return Response::json([
+                                'status' => 'Invalid request',
+                                'message' => 'You\'ve entered a code with an invalid descriptor',
+                                'code' => $code
+                            ],
+                            Respond::HTTP_BAD_REQUEST
+                        );
+                    }
                     break;
                 // If a special code
                 // @TODO Add a check for validity
